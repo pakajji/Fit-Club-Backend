@@ -47,28 +47,19 @@ app.put("/activity", async (req, res) => {
   const id = activity.id;
   const client = new MongoClient(uri);
   await client.connect();
-  await client
-    .db("mydb")
-    .collection("activities")
-    .updateOne(
-      { id: id },
-      {
-        $set: {
-          id: activity.id,
-          user: activity.user,
-          type: activity.type,
-          description: activity.description,
-          date: activity.date,
-          time: activity.time,
-          numberset: parseInt(activity.numberset),
-          calburned: parseInt(activity.calburned),
-          duration: parseInt(activity.duration),
-          heartrate: activity.heartrate,
-        },
-      },
-      { upsert: true }
-    );
-  await client.close();
+  await client.db("mydb").collection("activities").updateOne({"id": id}, {"$set": {
+      id: activity.id,
+      user: activity.user,
+      type: activity.type,
+      description: activity.description,
+      date: activity.date,
+      time: activity.time,
+      numberset: parseInt(activity.numberset),
+      calburned: parseInt(activity.calburned),
+      duration: parseInt(activity.duration),
+      heartrate: activity.heartrate
+  }},{upsert: true})
+  await client.close()
   res.status(200).send(activity);
 });
 
@@ -86,6 +77,7 @@ app.delete("/activity/:id", async (req, res) => {
     res.status(500).send("Something is wrong");
   }
 });
+
 
 //Post User
 app.post("/register", async (req, res) => {
