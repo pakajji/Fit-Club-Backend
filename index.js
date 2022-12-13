@@ -19,7 +19,6 @@ const { MongoClient } = require('mongodb')
 const uri = "mongodb+srv://jsd3-3-final-project:jsd3-3-final-project@fitclub.ce61urd.mongodb.net/test"
 
 
-//read activity
 app.get('/activity',async (req,res)=>{
   const client = new MongoClient(uri);
   await client.connect();
@@ -29,7 +28,7 @@ app.get('/activity',async (req,res)=>{
 })
 
 app.get('/activity/:id',async (req,res)=>{
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
   const client = new MongoClient(uri);
   await client.connect();
   const activity = await client.db("mydb").collection("activities").findOne({"id": id})
@@ -37,14 +36,13 @@ app.get('/activity/:id',async (req,res)=>{
   res.status(200).send(activity);
 })
 
-//update+insert activity
 app.put('/activity',async (req,res)=>{
   const activity = req.body;
-  const id = parseInt(activity.id);
+  const id = activity.id;
   const client = new MongoClient(uri);
   await client.connect();
   await client.db("mydb").collection("activities").updateOne({"id": id}, {"$set": {
-      id: parseInt(activity.id),
+      id: activity.id,
       user: activity.user,
       type: activity.type,
       description: activity.description,
@@ -59,12 +57,18 @@ app.put('/activity',async (req,res)=>{
   res.status(200).send(activity);
 })
 
-//delete activity
-app.delete('/activity',async (req,res)=>{
-  const id = parseInt(req.body.id);
+app.delete('/activity/:id',async (req,res)=>{
+  const id = req.params.id;
+  console.log("id",id)
   const client = new MongoClient(uri);
-  await client.connect();
-  await client.db("mydb").collection("activities").deleteOne({"id": id});
-  await client.close()
-  res.status(200).send("User with ID = " + id + " is deleted.");
+  try {
+    await client.connect();
+    await client.db("mydb").collection("activities").deleteOne({"id": id})
+    await client.close()
+    res.status(200).send("User with ID = " + id + " is deleted.");
+  } catch (error) {
+    console.log(error)
+    res.status(500).send("Something is wrong")
+  }
+  
 })
