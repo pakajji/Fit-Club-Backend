@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
-const cors = require("cors");
+const cors = require('cors');
+const config = require('./config')
 
 app.use(cors());
 app.use(express.json());
@@ -78,7 +79,6 @@ app.delete("/activity/:id", async (req, res) => {
   }
 });
 
-
 //Post User
 app.post("/register", async (req, res) => {
   const user = req.body;
@@ -104,28 +104,28 @@ app.post("/register", async (req, res) => {
 });
 
 //For K.Nine - update+insert User
-app.put("/register", async (req, res) => {
-  const user = req.body;
-  const id = parseInt(user.id);
-  const client = new MongoClient(uri);
-  await client.connect();
-  await client
-    .db("mydb")
-    .collection("Users")
-    .updateOne(
-      { id: id },
-      {
-        $set: {
-          id: parseInt(user.id),
-          user: user.name,
-          surname: user.surname,
-          email: user.email,
-          password: user.password,
-          confirmPassword: user.confirmPassword,
-        },
-      },
-      { upsert: true }
-    );
-  await client.close();
-  res.status(200).send(user);
-});
+// app.put("/register", async (req, res) => {
+//   const user = req.body;
+//   const id = parseInt(user.id);
+//   const client = new MongoClient(uri);
+//   await client.connect();
+//   await client
+//     .db("mydb")
+//     .collection("Users")
+//     .updateOne(
+//       { id: id },
+//       {
+//         $set: {
+//           id: parseInt(user.id),
+//           user: user.name,
+//           surname: user.surname,
+//           email: user.email,
+//           password: user.password,
+//           confirmPassword: user.confirmPassword,
+//         },
+//       },
+//       { upsert: true }
+//     );
+//   await client.close();
+//   res.status(200).send(user);
+// });
