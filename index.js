@@ -28,14 +28,14 @@ app.get('/activity',async (req,res)=>{
   res.status(200).send(activities);
 })
 
-app.get('/activity/:id',async (req,res)=>{
-  const id = req.params.id;
-  const client = new MongoClient(uri);
-  await client.connect();
-  const activity = await client.db("mydb").collection("activities").findOne({"id": id})
-  await client.close()
-  res.status(200).send(activity);
-})
+// app.get('/activity/:id',async (req,res)=>{
+//   const id = req.params.id;
+//   const client = new MongoClient(uri);
+//   await client.connect();
+//   const activity = await client.db("mydb").collection("activities").findOne({"id": id})
+//   await client.close()
+//   res.status(200).send(activity);
+// })
 
 app.put('/activity',async (req,res)=>{
   const activity = req.body;
@@ -45,6 +45,7 @@ app.put('/activity',async (req,res)=>{
   await client.db("mydb").collection("activities").updateOne({"id": id}, {"$set": {
       id: activity.id,
       user: activity.user,
+      title: activity.title,
       type: activity.type,
       description: activity.description,
       date: activity.date,
@@ -60,7 +61,6 @@ app.put('/activity',async (req,res)=>{
 
 app.delete('/activity/:id',async (req,res)=>{
   const id = req.params.id;
-  console.log("id",id)
   const client = new MongoClient(uri);
   try {
     await client.connect();
@@ -72,6 +72,47 @@ app.delete('/activity/:id',async (req,res)=>{
     res.status(500).send("Something is wrong")
   }
 })
+
+app.get('/activity/run',async (req,res)=>{
+  const client = new MongoClient(uri);
+  await client.connect();
+  const run = await client.db("mydb").collection("activities").find({ type : "run" }).toArray()
+  await client.close()
+  res.status(200).send(run);
+})
+
+app.get('/activity/walk',async (req,res)=>{
+  const client = new MongoClient(uri);
+  await client.connect();
+  const walk = await client.db("mydb").collection("activities").find({ type : "walk" }).toArray()
+  await client.close()
+  res.status(200).send(walk);
+})
+
+app.get('/activity/swimming',async (req,res)=>{
+  const client = new MongoClient(uri);
+  await client.connect();
+  const swimming = await client.db("mydb").collection("activities").find({ type : "swimming" }).toArray()
+  await client.close()
+  res.status(200).send(swimming);
+})
+
+app.get('/activity/bicycleride',async (req,res)=>{
+  const client = new MongoClient(uri);
+  await client.connect();
+  const bicycleride = await client.db("mydb").collection("activities").find({ type : "bicycleride" }).toArray()
+  await client.close()
+  res.status(200).send(bicycleride);
+})
+
+app.get('/activity/hiking',async (req,res)=>{
+  const client = new MongoClient(uri);
+  await client.connect();
+  const hiking = await client.db("mydb").collection("activities").find({ type : "hiking" }).toArray()
+  await client.close()
+  res.status(200).send(hiking);
+})
+
 
 //Post User
 app.post("/register", async (req, res) => {
@@ -93,7 +134,7 @@ app.post("/register", async (req, res) => {
   res.status(200).send({
     status: "ok",
     message: "User with ID" + user.id + "is created",
-    user: user,
+    user: user
   });
 });
 
@@ -105,7 +146,7 @@ app.post("/register", async (req, res) => {
 //   await client.connect();
 //   await client
 //     .db("mydb")
-//     .collection("Users")
+//     .collection("users")
 //     .updateOne(
 //       { id: id },
 //       {
