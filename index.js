@@ -7,26 +7,29 @@ const config = require('./config')
 app.use(cors());
 app.use(express.json());
 
-
 app.get("/", (req, res) => {
-res.send("Hello! Express");
+  res.send("Hello! Express");
 });
 
 app.listen(port, () => {
-console.log("Starting server at port " + port);
+  console.log("Starting server at port " + port);
 });
 
-const { MongoClient } = require('mongodb')
-const uri = "mongodb+srv://jsd3-3-final-project:jsd3-3-final-project@fitclub.ce61urd.mongodb.net/test"
+const { MongoClient } = require("mongodb");
+const uri =
+  "mongodb+srv://jsd3-3-final-project:jsd3-3-final-project@fitclub.ce61urd.mongodb.net/test";
 
-
-app.get('/activity',async (req,res)=>{
+app.get("/activity", async (req, res) => {
   const client = new MongoClient(uri);
   await client.connect();
-  const activities = await client.db("mydb").collection("activities").find({}).toArray()
-  await client.close()
+  const activities = await client
+    .db("mydb")
+    .collection("activities")
+    .find({})
+    .toArray();
+  await client.close();
   res.status(200).send(activities);
-})
+});
 
 // app.get('/activity/:id',async (req,res)=>{
 //   const id = req.params.id;
@@ -37,7 +40,7 @@ app.get('/activity',async (req,res)=>{
 //   res.status(200).send(activity);
 // })
 
-app.put('/activity',async (req,res)=>{
+app.put("/activity", async (req, res) => {
   const activity = req.body;
   const id = activity.id;
   const client = new MongoClient(uri);
@@ -57,21 +60,21 @@ app.put('/activity',async (req,res)=>{
   }},{upsert: true})
   await client.close()
   res.status(200).send(activity);
-})
+});
 
-app.delete('/activity/:id',async (req,res)=>{
+app.delete("/activity/:id", async (req, res) => {
   const id = req.params.id;
   const client = new MongoClient(uri);
   try {
     await client.connect();
-    await client.db("mydb").collection("activities").deleteOne({"id": id})
-    await client.close()
+    await client.db("mydb").collection("activities").deleteOne({ id: id });
+    await client.close();
     res.status(200).send("User with ID = " + id + " is deleted.");
   } catch (error) {
-    console.log(error)
-    res.status(500).send("Something is wrong")
+    console.log(error);
+    res.status(500).send("Something is wrong");
   }
-})
+});
 
 app.get('/activity/run',async (req,res)=>{
   const client = new MongoClient(uri);
