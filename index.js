@@ -2,7 +2,17 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors');
-const config = require('./config')
+// const config = require('./config')
+
+// const start = async () => {
+//   await mongoose.connect(config.mongodb.uri,{
+//     user: config.mongodb.username,
+//     pass: config.mongodb.password,
+//     retryWrites: true
+//   })
+// }
+
+//start()
 
 app.use(cors());
 app.use(express.json());
@@ -16,8 +26,8 @@ app.listen(port, () => {
 });
 
 const { MongoClient } = require("mongodb");
-const uri =
-  "mongodb+srv://jsd3-3-final-project:jsd3-3-final-project@fitclub.ce61urd.mongodb.net/test";
+const { default: mongoose } = require("mongoose");
+const uri = process.env.URI
 
 app.get("/activity", async (req, res) => {
   const client = new MongoClient(uri);
@@ -31,7 +41,8 @@ app.get("/activity", async (req, res) => {
   res.status(200).send(activities);
 });
 
-// app.get('/activity/:id',async (req,res)=>{
+//หน้าอัพเดทแอคทิวิตี้
+// app.get('/add-activity/:id',async (req,res)=>{
 //   const id = req.params.id;
 //   const client = new MongoClient(uri);
 //   await client.connect();
@@ -40,6 +51,7 @@ app.get("/activity", async (req, res) => {
 //   res.status(200).send(activity);
 // })
 
+//เพิ่มและอัพเดท
 app.put("/activity", async (req, res) => {
   const activity = req.body;
   const id = activity.id;
@@ -120,6 +132,7 @@ app.get('/activity/hiking',async (req,res)=>{
 //Post User
 app.post("/register", async (req, res) => {
   const user = req.body;
+  console.log(user)
   const client = new MongoClient(uri);
   await client.connect();
   await client
