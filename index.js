@@ -153,30 +153,3 @@ app.post("/register", async (req, res) => {
     user: user
   });
 });
-
-//For K.Nine - update+insert User
-// app.put("/register", async (req, res) => {
-//   const user = req.body;
-//   const id = parseInt(user.id);
-//   const client = new MongoClient(uri);
-//   await client.connect();
-//   await client
-//     .db("mydb")
-//     .collection("users")
-//     .updateOne(
-//       { id: id },
-//       {
-//         $set: {
-//           id: parseInt(user.id),
-//           user: user.name,
-//           surname: user.surname,
-//           email: user.email,
-//           password: user.password,
-//           confirmPassword: user.confirmPassword,
-//         },
-//       },
-//       { upsert: true }
-//     );
-//   await client.close();
-//   res.status(200).send(user);
-// });
