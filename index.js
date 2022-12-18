@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require('cors');
+
 // const config = require('./config')
 
 // const start = async () => {
@@ -26,8 +27,8 @@ app.listen(port, () => {
 });
 
 const { MongoClient } = require("mongodb");
-const { default: mongoose } = require("mongoose");
-const uri = process.env.URI
+//const { default: mongoose } = require("mongoose");
+const uri = 'mongodb+srv://jsd3-3-final-project:jsd3-3-final-project@fitclub.ce61urd.mongodb.net/test'
 
 app.get("/activity", async (req, res) => {
   const client = new MongoClient(uri);
@@ -52,13 +53,13 @@ app.get("/activity", async (req, res) => {
 // })
 
 //เพิ่มและอัพเดท
-app.put("/activity", async (req, res) => {
+app.put("/activity/:id", async (req, res) => {
   const activity = req.body;
-  const id = activity.id;
+  const id = req.params.id;
   const client = new MongoClient(uri);
   await client.connect();
   await client.db("mydb").collection("activities").updateOne({"id": id}, {"$set": {
-      id: activity.id,
+      id: id,
       user: activity.user,
       title: activity.title,
       type: activity.type,
