@@ -154,3 +154,31 @@ app.post("/register", async (req, res) => {
     user: user
   });
 });
+
+app.put("/profile", async (req, res) => {
+  const profile = req.body;
+  const user = profile.nickname
+  // const id = req.params.id;
+  const client = new MongoClient(uri);
+  await client.connect();
+  await client.db("mydb").collection("profile").updateOne({"nickname": user}, {"$set": {
+    picUrl: profile.picUrl,
+    name: profile.name,
+    surname: profile.surname,
+    nickname: profile.nickname,
+    dateOfBirth: profile.dateOfBirth,
+    weight: parseInt(profile.weight),
+    height: parseInt(profile.height),
+    sex: profile.sex,
+  }},{upsert: true})
+  await client.close()
+  res.status(200).send(profile);
+});
+
+// app.get('/profile',async (req,res)=>{
+//   const client = new MongoClient(uri);
+//   await client.connect();
+//   const picprofile = await client.db("mydb").collection("profile").find({ type : "profilepic" }).toArray()
+//   await client.close()
+//   res.status(200).send(walk);
+// })
