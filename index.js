@@ -129,32 +129,6 @@ app.get('/activity/hiking',async (req,res)=>{
   res.status(200).send(hiking);
 })
 
-
-//Post User
-app.post("/register", async (req, res) => {
-  const user = req.body;
-  console.log(user)
-  const client = new MongoClient(uri);
-  await client.connect();
-  await client
-    .db("mydb")
-    .collection("users")
-    .insertOne({
-      id: parseInt(user.id),
-      user: user.name,
-      surname: user.surname,
-      email: user.email,
-      password: user.password,
-      confirmPassword: user.confirmPassword,
-    });
-  await client.close();
-  res.status(200).send({
-    status: "ok",
-    message: "User with ID" + user.id + "is created",
-    user: user
-  });
-});
-
 app.put("/profile", async (req, res) => {
   const profile = req.body;
   const user = profile.nickname
